@@ -95,8 +95,8 @@ for epoch in range(num_epochs):
     i = 0
     for (data, target) in train_loader:
 
-        real_label = Variable(tocuda(torch.ones(batch_size)))
-        fake_label = Variable(tocuda(torch.zeros(batch_size)))
+        real_label = Variable(tocuda(torch.Tensor(batch_size).uniform_(0.7, 1.2)))
+        fake_label = Variable(tocuda(torch.Tensor(batch_size).uniform_(0, 0.3)))
 
         noise1 = Variable(tocuda(torch.Tensor(data.size()).normal_(0, 0.1 * (num_epochs - epoch) / num_epochs)))
         noise2 = Variable(tocuda(torch.Tensor(data.size()).normal_(0, 0.1 * (num_epochs - epoch) / num_epochs)))
