@@ -60,8 +60,7 @@ if opt.dataset == 'svhn':
     train_loader = torch.utils.data.DataLoader(
         datasets.SVHN(root=opt.dataroot, split='extra', download=True,
                       transform=transforms.Compose([
-                          transforms.ToTensor(),
-                          transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+                          transforms.ToTensor()
                       ])),
         batch_size=batch_size, shuffle=True)
 elif opt.dataset == 'cifar10':
@@ -69,8 +68,7 @@ elif opt.dataset == 'cifar10':
     train_loader = torch.utils.data.DataLoader(
         datasets.CIFAR10(root=opt.dataroot, train=True, download=True,
                       transform=transforms.Compose([
-                          transforms.ToTensor(),
-                          transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+                          transforms.ToTensor()
                       ])),
         batch_size=batch_size, shuffle=True)
 else:
@@ -95,8 +93,8 @@ for epoch in range(num_epochs):
     i = 0
     for (data, target) in train_loader:
 
-        real_label = Variable(tocuda(torch.Tensor(batch_size).uniform_(0.7, 1.2)))
-        fake_label = Variable(tocuda(torch.Tensor(batch_size).uniform_(0, 0.3)))
+        real_label = Variable(tocuda(torch.ones(batch_size)))
+        fake_label = Variable(tocuda(torch.zeros(batch_size)))
 
         noise1 = Variable(tocuda(torch.Tensor(data.size()).normal_(0, 0.1 * (num_epochs - epoch) / num_epochs)))
         noise2 = Variable(tocuda(torch.Tensor(data.size()).normal_(0, 0.1 * (num_epochs - epoch) / num_epochs)))
