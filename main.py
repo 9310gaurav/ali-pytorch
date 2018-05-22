@@ -124,9 +124,10 @@ for epoch in range(num_epochs):
         loss_d = criterion(output_real, real_label) + criterion(output_fake, fake_label)
         loss_g = criterion(output_fake, real_label) + criterion(output_real, fake_label)
 
-        optimizerD.zero_grad()
-        loss_d.backward(retain_graph=True)
-        optimizerD.step()
+        if loss_g.data[0] < 4.5:
+            optimizerD.zero_grad()
+            loss_d.backward(retain_graph=True)
+            optimizerD.step()
 
         optimizerG.zero_grad()
         loss_g.backward()
