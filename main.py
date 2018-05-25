@@ -92,8 +92,8 @@ for epoch in range(num_epochs):
     i = 0
     for (data, target) in train_loader:
 
-        real_label = Variable(tocuda(torch.ones(batch_size)))
-        fake_label = Variable(tocuda(torch.zeros(batch_size)))
+        real_label = Variable(tocuda(torch.Tensor(batch_size).uniform_(0.7, 1.2)))
+        fake_label = Variable(tocuda(torch.Tensor(batch_size).uniform_(0, 0.3)))
 
         noise1 = Variable(tocuda(torch.Tensor(data.size()).normal_(0, 0.1 * (num_epochs - epoch) / num_epochs)))
         noise2 = Variable(tocuda(torch.Tensor(data.size()).normal_(0, 0.1 * (num_epochs - epoch) / num_epochs)))
@@ -124,10 +124,9 @@ for epoch in range(num_epochs):
         loss_d = criterion(output_real, real_label) + criterion(output_fake, fake_label)
         loss_g = criterion(output_fake, real_label) + criterion(output_real, fake_label)
 
-        if loss_g.data[0] < 4.5:
-            optimizerD.zero_grad()
-            loss_d.backward(retain_graph=True)
-            optimizerD.step()
+        optimizerD.zero_grad()
+        loss_d.backward(retain_graph=True)
+        optimizerD.step()
 
         optimizerG.zero_grad()
         loss_g.backward()
