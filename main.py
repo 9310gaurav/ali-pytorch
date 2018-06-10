@@ -10,7 +10,6 @@ batch_size = 100
 lr = 1e-4
 latent_size = 256
 num_epochs = 100
-use_cuda = True
 cuda_device = "0"
 
 parser = argparse.ArgumentParser()
@@ -92,8 +91,8 @@ for epoch in range(num_epochs):
     i = 0
     for (data, target) in train_loader:
 
-        real_label = Variable(tocuda(torch.Tensor(batch_size).uniform_(0.7, 1.2)))
-        fake_label = Variable(tocuda(torch.Tensor(batch_size).uniform_(0, 0.3)))
+        real_label = Variable(tocuda(torch.ones(batch_size)))
+        fake_label = Variable(tocuda(torch.zeros(batch_size)))
 
         noise1 = Variable(tocuda(torch.Tensor(data.size()).normal_(0, 0.1 * (num_epochs - epoch) / num_epochs)))
         noise2 = Variable(tocuda(torch.Tensor(data.size()).normal_(0, 0.1 * (num_epochs - epoch) / num_epochs)))
@@ -124,9 +123,10 @@ for epoch in range(num_epochs):
         loss_d = criterion(output_real, real_label) + criterion(output_fake, fake_label)
         loss_g = criterion(output_fake, real_label) + criterion(output_real, fake_label)
 
-        optimizerD.zero_grad()
-        loss_d.backward(retain_graph=True)
-        optimizerD.step()
+        if loss_g.data[0] < 3.5:
+            optimizerD.zero_grad()
+            loss_d.backward(retain_graph=True)
+            optimizerD.step()
 
         optimizerG.zero_grad()
         loss_g.backward()
@@ -142,8 +142,9 @@ for epoch in range(num_epochs):
 
         i += 1
 
-    if epoch % 1 == 0:
+    if epoch % 10 == 0:
         torch.save(netG.state_dict(), './%s/netG_epoch_%d.pth' % (opt.save_model_dir, epoch))
         torch.save(netE.state_dict(), './%s/netE_epoch_%d.pth' % (opt.save_model_dir, epoch))
         torch.save(netD.state_dict(), './%s/netD_epoch_%d.pth' % (opt.save_model_dir, epoch))
 
+        vutils.save_image(d_fake.cpu().data[:16, ], './%s/fake_%d.png' % (opt.save_image_dir, epoch))
