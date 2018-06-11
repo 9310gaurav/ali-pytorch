@@ -4,8 +4,12 @@ PyTorch implementation of [Aversarially Learned Inference](https://arxiv.org/abs
 ## SVHN samples
 ### After 1 epoch : 
 <img src="https://github.com/9310gaurav/ali-pytorch/blob/master/saved_images_svhn/fake_0.png" width="480">
+
 ### After 10 epochs :
 <img src="https://github.com/9310gaurav/ali-pytorch/blob/master/saved_images_svhn/fake_10.png" width="480">
+
+### After 40 epochs :
+<img src="https://github.com/9310gaurav/ali-pytorch/blob/master/saved_images_svhn/fake_40.png" width="480">
 
 ## Cite
 ```
