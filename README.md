@@ -11,6 +11,16 @@ PyTorch implementation of [Aversarially Learned Inference](https://arxiv.org/abs
 ### After 40 epochs :
 <img src="https://github.com/9310gaurav/ali-pytorch/blob/master/saved_images_svhn/fake_40.png" width="480">
 
+## CIFAR10 samples :
+### After 1 epoch :
+<img src="https://github.com/9310gaurav/ali-pytorch/blob/master/saved_images_cifar/fake_0.png" width="480">
+
+### After 100 epochs :
+<img src="https://github.com/9310gaurav/ali-pytorch/blob/master/saved_images_cifar/fake_100.png" width="480">
+
+### After 500 epochs :
+<img src="https://github.com/9310gaurav/ali-pytorch/blob/master/saved_images_cifar/fake.png" width="480">
+
 ## Cite
 ```
 @article{DBLP:journals/corr/DumoulinBPLAMC16,
