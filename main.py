@@ -12,17 +12,23 @@ latent_size = 256
 num_epochs = 100
 cuda_device = "0"
 
+
+def boolean_string(s):
+    if s not in {'False', 'True'}:
+        raise ValueError('Not a valid boolean string')
+    return s == 'True'
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--dataset', required=True, help='cifar10 | svhn')
 parser.add_argument('--dataroot', required=True, help='path to dataset')
-parser.add_argument('--use_cuda', type=bool, default=True)
+parser.add_argument('--use_cuda', type=boolean_string, default=True)
 parser.add_argument('--save_model_dir', required=True)
 parser.add_argument('--save_image_dir', required=True)
 
 opt = parser.parse_args()
 
 os.environ["CUDA_VISIBLE_DEVICES"] = cuda_device
-
+print(opt)
 
 def tocuda(x):
     if opt.use_cuda:
@@ -132,7 +138,7 @@ for epoch in range(num_epochs):
         loss_g.backward()
         optimizerG.step()
 
-        if i % 100 == 0:
+        if i % 1 == 0:
             print("Epoch :", epoch, "Iter :", i, "D Loss :", loss_d.data[0], "G loss :", loss_g.data[0],
                   "D(x) :", output_real.mean().data[0], "D(G(x)) :", output_fake.mean().data[0])
 
