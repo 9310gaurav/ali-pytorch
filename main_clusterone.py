@@ -6,6 +6,7 @@ import torchvision.utils as vutils
 from model import *
 import os
 from clusterone import get_data_path, get_logs_path
+import cifar
 
 CLUSTERONE_USERNAME = "gaurav9310"
 
@@ -66,13 +67,13 @@ def get_log_odds(raw_marginals):
 
 
 train_loader = torch.utils.data.DataLoader(
-    datasets.CIFAR10(root=get_data_path(
+    cifar.CIFAR10(root=get_data_path(
         dataset_name="%s/cifar"%CLUSTERONE_USERNAME,
         local_root=opt.dataroot,
         local_repo="",
         path=""
     )
-                     , train=True, download=True,
+                     , train=False, download=False,
                   transform=transforms.Compose([
                       transforms.ToTensor()
                   ])),
