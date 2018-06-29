@@ -73,7 +73,7 @@ train_loader = torch.utils.data.DataLoader(
         local_repo="",
         path=""
     )
-                     , train=False, download=True,
+                     , train=True, download=True,
                   transform=transforms.Compose([
                       transforms.ToTensor()
                   ])),
