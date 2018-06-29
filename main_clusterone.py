@@ -68,7 +68,7 @@ def get_log_odds(raw_marginals):
 
 train_loader = torch.utils.data.DataLoader(
     cifar.CIFAR10(root=get_data_path(
-        dataset_name="%s/cifar"%CLUSTERONE_USERNAME,
+        dataset_name="%s/cifars3"%CLUSTERONE_USERNAME,
         local_root=opt.dataroot,
         local_repo="",
         path=""
