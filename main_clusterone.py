@@ -142,7 +142,7 @@ for epoch in range(num_epochs):
         loss_g.backward()
         optimizerG.step()
 
-        if i % 1 == 0:
+        if i % 100 == 0:
             print("Epoch :", epoch, "Iter :", i, "D Loss :", loss_d.data[0], "G loss :", loss_g.data[0],
                   "D(x) :", output_real.mean().data[0], "D(G(x)) :", output_fake.mean().data[0])
 
