@@ -79,6 +79,8 @@ train_loader = torch.utils.data.DataLoader(
                   ])),
     batch_size=batch_size, shuffle=True)
 
+save_image_dir = get_logs_path(opt.save_image_dir)
+save_model_dir = get_logs_path(opt.save_model_dir)
 
 netE = tocuda(Encoder(latent_size, True))
 netG = tocuda(Generator(latent_size))
@@ -146,15 +148,15 @@ for epoch in range(num_epochs):
 
         if i % 50 == 0:
             vutils.save_image(d_fake.cpu().data[:16, ],
-                              get_logs_path("./%s/fake.png" % (opt.save_image_dir))
+                              "%s/fake.png" % (save_image_dir)
                               )
-            vutils.save_image(d_real.cpu().data[:16, ], get_logs_path("./%s/real.png"% (opt.save_image_dir)))
+            vutils.save_image(d_real.cpu().data[:16, ], "%s/real.png"% (save_image_dir))
 
         i += 1
 
     if epoch % 10 == 0:
-        torch.save(netG.state_dict(), get_logs_path("./%s/netG_epoch_%d.pth" % (opt.save_model_dir, epoch)))
-        torch.save(netE.state_dict(), get_logs_path("./%s/netE_epoch_%d.pth" % (opt.save_model_dir, epoch)))
-        torch.save(netD.state_dict(), get_logs_path("./%s/netD_epoch_%d.pth" % (opt.save_model_dir, epoch)))
+        torch.save(netG.state_dict(), "%s/netG_epoch_%d.pth" % (save_model_dir, epoch))
+        torch.save(netE.state_dict(), "%s/netE_epoch_%d.pth" % (save_model_dir, epoch))
+        torch.save(netD.state_dict(), "%s/netD_epoch_%d.pth" % (save_model_dir, epoch))
 
-        vutils.save_image(d_fake.cpu().data[:16, ], get_logs_path("./%s/fake_%d.png" % (opt.save_image_dir, epoch)))
+        vutils.save_image(d_fake.cpu().data[:16, ], "%s/fake_%d.png" % (save_image_dir, epoch))
