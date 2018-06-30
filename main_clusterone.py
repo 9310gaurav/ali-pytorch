@@ -142,7 +142,7 @@ for epoch in range(num_epochs):
         loss_g.backward()
         optimizerG.step()
 
-        if i % 100 == 0:
+        if i % 1 == 0:
             print("Epoch :", epoch, "Iter :", i, "D Loss :", loss_d.data[0], "G loss :", loss_g.data[0],
                   "D(x) :", output_real.mean().data[0], "D(G(x)) :", output_fake.mean().data[0])
 
@@ -154,7 +154,7 @@ for epoch in range(num_epochs):
 
         i += 1
 
-    if epoch % 10 == 0:
+    if epoch % 1 == 0:
         torch.save(netG.state_dict(), "%s/netG_epoch_%d.pth" % (save_model_dir, epoch))
         torch.save(netE.state_dict(), "%s/netE_epoch_%d.pth" % (save_model_dir, epoch))
         torch.save(netD.state_dict(), "%s/netD_epoch_%d.pth" % (save_model_dir, epoch))
