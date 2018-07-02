@@ -5,6 +5,7 @@ from torch.autograd import Variable
 import torchvision.utils as vutils
 from model import *
 import os
+from pathlib import Path
 from clusterone import get_data_path, get_logs_path
 
 
@@ -27,6 +28,7 @@ parser.add_argument('--dataroot', required=True, help='path to dataset')
 parser.add_argument('--use_cuda', type=boolean_string, default=True)
 parser.add_argument('--save_model_dir', required=True)
 parser.add_argument('--save_image_dir', required=True)
+parser.add_argument('--reuse', type=boolean_string, default=False)
 
 opt = parser.parse_args()
 
@@ -86,17 +88,43 @@ netE = tocuda(Encoder(latent_size, True))
 netG = tocuda(Generator(latent_size))
 netD = tocuda(Discriminator(latent_size, 0.2, 1))
 
-netE.apply(weights_init)
-netG.apply(weights_init)
-netD.apply(weights_init)
+if opt.reuse:
+    for epoch in range(num_epochs):
+        model_file = Path("%s/netG_epoch_%d.pth" % (save_model_dir, epoch))
+        if model_file.is_file():
+            continue
+        else:
+            break
 
+    epoch = epoch - 1
+
+    if epoch == -1:
+        netE.apply(weights_init)
+        netG.apply(weights_init)
+        netD.apply(weights_init)
+        print("No saved models found to resume from. Starting from scratch.")
+    else:
+        print("Loading models saved after epochs : ", epoch + 1)
+        encoder_state_dict = torch.load("%s/netE_epoch_%d.pth" % (save_model_dir, epoch))
+        generator_state_dict = torch.load("%s/netG_epoch_%d.pth" % (save_model_dir, epoch))
+        discriminator_state_dict = torch.load("%s/netD_epoch_%d.pth" % (save_model_dir, epoch))
+
+        netE.load_state_dict(encoder_state_dict)
+        netG.load_state_dict(generator_state_dict)
+        netD.load_state_dict(discriminator_state_dict)
+else:
+    netE.apply(weights_init)
+    netG.apply(weights_init)
+    netD.apply(weights_init)
+
+current_epoch = epoch + 1
 optimizerG = optim.Adam([{'params' : netE.parameters()},
                          {'params' : netG.parameters()}], lr=lr, betas=(0.5,0.999))
 optimizerD = optim.Adam(netD.parameters(), lr=lr, betas=(0.5, 0.999))
 
 criterion = nn.BCELoss()
 
-for epoch in range(num_epochs):
+for epoch in range(current_epoch, num_epochs):
 
     i = 0
     for (data, target) in train_loader:
