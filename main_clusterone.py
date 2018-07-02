@@ -119,7 +119,7 @@ else:
     netG.apply(weights_init)
     netD.apply(weights_init)
 
-current_epoch = epoch + 1
+current_epoch = epoch + 1*opt.save_freq
 optimizerG = optim.Adam([{'params' : netE.parameters()},
                          {'params' : netG.parameters()}], lr=lr, betas=(0.5,0.999))
 optimizerD = optim.Adam(netD.parameters(), lr=lr, betas=(0.5, 0.999))
@@ -172,7 +172,7 @@ for epoch in range(current_epoch, num_epochs):
         loss_g.backward()
         optimizerG.step()
 
-        if i % 1 == 0:
+        if i % 100 == 0:
             print("Epoch :", epoch, "Iter :", i, "D Loss :", loss_d.data[0], "G loss :", loss_g.data[0],
                   "D(x) :", output_real.mean().data[0], "D(G(x)) :", output_fake.mean().data[0])
 
