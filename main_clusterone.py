@@ -29,6 +29,7 @@ parser.add_argument('--use_cuda', type=boolean_string, default=True)
 parser.add_argument('--save_model_dir', required=True)
 parser.add_argument('--save_image_dir', required=True)
 parser.add_argument('--reuse', type=boolean_string, default=False)
+parser.add_argument('--save_freq', type=int, default=1)
 
 opt = parser.parse_args()
 
@@ -90,15 +91,16 @@ netD = tocuda(Discriminator(latent_size, 0.2, 1))
 
 if opt.reuse:
     for epoch in range(num_epochs):
-        model_file = Path("%s/netG_epoch_%d.pth" % (save_model_dir, epoch))
-        if model_file.is_file():
-            continue
-        else:
-            break
+        if epoch % opt.save_freq == 0:
+            model_file = Path("%s/netG_epoch_%d.pth" % (save_model_dir, epoch))
+            if model_file.is_file():
+                continue
+            else:
+                break
 
-    epoch = epoch - 1
+    epoch = epoch - 1*opt.save_freq
 
-    if epoch == -1:
+    if epoch == -1*opt.save_freq:
         netE.apply(weights_init)
         netG.apply(weights_init)
         netD.apply(weights_init)
@@ -182,7 +184,7 @@ for epoch in range(current_epoch, num_epochs):
 
         i += 1
 
-    if epoch % 1 == 0:
+    if epoch % opt.save_freq == 0:
         torch.save(netG.state_dict(), "%s/netG_epoch_%d.pth" % (save_model_dir, epoch))
         torch.save(netE.state_dict(), "%s/netE_epoch_%d.pth" % (save_model_dir, epoch))
         torch.save(netD.state_dict(), "%s/netD_epoch_%d.pth" % (save_model_dir, epoch))
